@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ficha del Menor - Sabores del sur</title>
+<style>
+  *{box-sizing:border-box;font-family:Arial,sans-serif}
+  body{margin:0;background:#f8f4ef;color:#4b3621;padding:20px;display:flex;justify-content:center;align-items:center;min-height:100vh}
+  .card{background:#fff;width:100%;max-width:450px;border-radius:16px;box-shadow:0 8px 25px rgba(0,0,0,0.15);overflow:hidden}
+  .header{background:linear-gradient(135deg,#6F4E37,#A67B5B);color:#fff;text-align:center;padding:25px}
+  .header h2{margin:0;font-size:22px}
+  .header p{margin:5px 0 0;font-size:14px;opacity:0.9}
+  .content{padding:25px}
+  .info-group{margin-bottom:18px;border-bottom:1px solid #f1f1f1;padding-bottom:10px}
+  .info-group:last-child{border:none}
+  .label{font-size:12px;color:#8c7b70;text-transform:uppercase;font-weight:bold;margin-bottom:4px}
+  .value{font-size:17px;font-weight:bold;color:#4b3621}
+  
+  /* Alergia Destacada */
+  .alergia-box{background:#ffebeb;border:1.5px dashed #ff4d4d;color:#d63031;padding:12px;border-radius:8px;margin-top:15px;display:none}
+  .alergia-box.activo{display:block}
+  
+  /* Botones de acción rápida para iPhone */
+  .btn-action{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;margin-top:12px;border:none;border-radius:10px;color:white;font-weight:bold;font-size:16px;text-decoration:none;cursor:pointer}
+  .btn-llamada{background-color:#2980b9}
+  .btn-whatsapp{background-color:#2ecc71}
+  .btn-action:hover{opacity:0.9}
+</style>
+</head><body>
+
+<div class="card">
+  <div class="header">
+    <h2>☕ Cafeteria & Pastelería</h2>
+	<h2>Sabores del sur</h2>
+    <p>Área de Juegos - Control de Ingreso</p>
+  </div>
+  <div class="content">
+    <div class="info-group">
+      <div class="label">Código de Registro</div>
+      <div class="value" id="lbl-codigo">-</div>
+    </div>
+    <div class="info-group">
+      <div class="label">Nombre del Menor</div>
+      <div class="value" id="lbl-nombre">-</div>
+    </div>
+    <div class="info-group">
+      <div class="label">Edad</div>
+      <div class="value" id="lbl-edad">-</div>
+    </div>
+    <div class="info-group">
+      <div class="label">Hora de Entrada</div>
+      <div class="value" id="lbl-hora">-</div>
+    </div>
+    <div class="info-group">
+      <div class="label font-weight-bold">Adulto Responsable</div>
+      <div class="value" id="lbl-tutor">-</div>
+    </div>
+
+    <!-- Banner de Alergia -->
+    <div class="alergia-box" id="alergia-box">
+      ⚠️ ALERGIA: <span id="lbl-alergia">Ninguna</span>
+    </div>
+
+    <!-- Botones interactivos inteligentes -->
+    <a href="#" class="btn-action btn-llamada" id="btn-call">📞 Llamar al Tutor</a>
+    <a href="#" class="btn-action btn-whatsapp" id="btn-wa">💬 Enviar WhatsApp</a>
+  </div>
+</div>
+
+<script>
+  // LEER LOS DATOS ENCRIPTADOS DESDE LA URL DEL QR
+  const params = new URLSearchParams(window.location.search);
+  
+  const codigo = params.get('cod') || 'No especificado';
+  const nombre = params.get('n') || 'No especificado';
+  const edad = params.get('e') || '-';
+  const alergia = params.get('al') || 'Ninguna';
+  const tutor = params.get('t') || 'No especificado';
+  const telefono = params.get('tel') || '';
+  const hora = params.get('h') || '-';
+
+  // Inyectar datos en la pantalla
+  document.getElementById('lbl-codigo').textContent = codigo;
+  document.getElementById('lbl-nombre').textContent = nombre;
+  document.getElementById('lbl-edad').textContent = edad + " años";
+  document.getElementById('lbl-hora').textContent = hora;
+  document.getElementById('lbl-tutor').textContent = tutor;
+
+  // Lógica de alergias
+  if(alergia.toLowerCase() !== 'ninguna' && alergia.trim() !== '') {
+    const box = document.getElementById('alergia-box');
+    box.classList.add('activo');
+    document.getElementById('lbl-alergia').textContent = alergia;
+  }
+
+  // Configurar los botones de acción rápida telefónica
+  if(telefono) {
+    // Configurar llamada clásica
+    document.getElementById('btn-call').href = `tel:${telefono}`;
+    
+    // Configurar mensaje de WhatsApp pre-escrito
+    const mensajeWA = encodeURIComponent(`Hola ${tutor}, te escribimos de Dulce Café & Pastelería respecto a tu hijo/a ${nombre} que está en nuestro salón de juegos.`);
+    document.getElementById('btn-wa').href = `https://wa.me/${telefono}?text=${mensajeWA}`;
+  } else {
+    // Ocultar botones si no hay teléfono
+    document.getElementById('btn-call').style.display = 'none';
+    document.getElementById('btn-wa').style.display = 'none';
+  }
+</script>
+</body></html>
